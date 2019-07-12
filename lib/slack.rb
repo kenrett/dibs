@@ -34,7 +34,7 @@ class Slack
     @actions = opts.fetch(:actions, [])
     @attachments = []
     @filepath = opts.fetch(:filepath, nil)
-    @callback_id = opts.fetch(:callback_id, 'lacroix')
+    @callback_id = opts.fetch(:callback_id, 'dibs')
 
     # format attachments
     if @actions.any?
@@ -43,7 +43,7 @@ class Slack
         attachments << {
           color: '#3AA3E3',
           text: '', # "#{a[0][:name].titleize}",
-          callback_id: 'lacroix',
+          callback_id: 'dibs',
           actions: a
         }
       end
