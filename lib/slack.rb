@@ -86,5 +86,4 @@ class Slack
       req.body = body
     end
   end
-
 end

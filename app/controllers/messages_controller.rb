@@ -7,6 +7,10 @@ class MessagesController < ApplicationController
   private
 
   def render_to_slack(args)
+    p "*" * 100
+    p Slack.new
+    p ::Slack.new
+    p "*" * 100
     slack_message = ::Slack.new(args)
     slack_args = slack_message.get_slack_args
 
