@@ -60,53 +60,6 @@ class Slack
     }
   end
 
-  # simple post to the Slack LaCroix Bot DM channel (aka "App DM").
-  # Pass an encoded Slack user_id (e.g. U12345) and an encoded Slack team_id (e.g. T1245)
-  # The given workspace must already have gone through the OAuth flow and stored a bot token in our side first.
-  # You can do this by going to /provision and authorizing the app on your workspace
-  #
-  # For example, here is a simple call to this method
-  #     slack = Slack.new({text: "Hi there good sir"})
-  #     slack.post_to_bot_dm('U04GFUB4R', 'T04GF0BAF')
-  #
-  def post_to_bot_dm(slack_user_id, slack_team_id)
-    auth = get_user_auth(slack_team_id)
-
-    body = get_slack_args
-    body[:channel] = slack_user_id
-    body[:as_user] = true
-
-    call_slack_api_json('chat.postMessage', body, auth.bot_access_token)
-  end
-
-  # Same as above, but post a file instead of just a method
-  # Technically file uploads are different from just message sending, and use a different Slack API,
-  # but we could just combine these actions into one method for simplicity. If so, just need to refactor
-  # The caveat is that file uploads require a Slack channel ID, so we need to call two Slack APIs here
-  # instead of just one when we want to send a single message.
-  def post_file_to_bot_dm(slack_user_id, slack_team_id)
-    auth = get_user_auth(slack_team_id)
-    mime = MimeMagic.by_magic(File.open(@filepath))
-    dm_channel = nil
-
-    # First we need to figure out the DM channel for the given user
-    body = {
-      user: slack_user_id
-    }
-    dm_data = JSON.parse(call_slack_api_json('im.open', body, auth.bot_access_token).body)
-    raise ArgumentError.new("Received error from Slack API: #{dm_data['error']}") if dm_data['ok'] == false
-    dm_channel = dm_data['channel']['id']
-    raise ArgumentError.new("Unable to find DM channel between bot and user #{slack_user_id}") if dm_channel.nil?
-
-    body = {
-      channels: dm_channel,
-      file: Faraday::UploadIO.new(@filepath, mime.type),
-      initial_comment: @text
-    }
-
-    call_slack_api_json('files.upload', body, auth.bot_access_token)
-  end
-
   private
 
   # Find an auth row for the given team and return it
