@@ -12,15 +12,12 @@ require 'mimemagic'
 #
 # Simplest usage to just send some text:
 #   slack = Slack.new({text: "Hellow wurld"})
-#   slack.post_to_bot_dm('U12345', 'T123455')
 #
 # Sending a message with a button
 #   slack = Slack.new({text: 'Click me!', actions: [{name: 'some button', text: 'click me!', value: 1234, type: 'button'}]})
-#   slack.post_to_bot_dm('U12345', 'T123455')
 #
 # Sending a file with a message
 #   slack = Slack.new({text: 'Here is a pic!', filepath: '/path/to/file.jpg'})
-#   slack.post_file_to_bot_dm('U12345', 'T123455')
 #
 
 
